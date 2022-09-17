@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.BinareTree", "DotNetLab.BinareTree\DotNetLab.BinareTree.csproj", "{2C435F4A-9363-4202-AFC8-89D1FB25DEF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.BinareTree.TreeRealization", "DotNetLab.BinareTree.TreeRealization\DotNetLab.BinareTree.TreeRealization.csproj", "{BD0C972A-8E65-4C14-B1AF-A105BBD68FE8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C435F4A-9363-4202-AFC8-89D1FB25DEF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C435F4A-9363-4202-AFC8-89D1FB25DEF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C435F4A-9363-4202-AFC8-89D1FB25DEF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C435F4A-9363-4202-AFC8-89D1FB25DEF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD0C972A-8E65-4C14-B1AF-A105BBD68FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD0C972A-8E65-4C14-B1AF-A105BBD68FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD0C972A-8E65-4C14-B1AF-A105BBD68FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD0C972A-8E65-4C14-B1AF-A105BBD68FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D317F5F8-B973-4B7D-AC97-79D8892934F2}
+	EndGlobalSection
+EndGlobal
