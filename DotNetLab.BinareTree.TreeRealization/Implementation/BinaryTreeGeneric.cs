@@ -1,46 +1,86 @@
 ﻿using DotNetLab.BinareTree.TreeRealization.Abstraction.Generic;
 using DotNetLab.BinareTree.TreeRealization.Common;
+using DotNetLab.BinareTree.TreeRealization.Common.Args;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DotNetLab.BinareTree.TreeRealization.Implementation
 {
     public class BinaryTreeGeneric<T> : IBinarTree<T> where T : IComparable<T>
     {
-        public Node<T> _root;
+        private int _count = 0;
+        private Node<T> _root;
+
+        public event EventHandler<BinaryTreeEventArgs> Notify;
+
         public int Count
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get => _count;
         }
 
-        public bool IsSynchronized => throw new NotImplementedException();
+        public bool IsSynchronized { get; set; }
 
-        public object SyncRoot => throw new NotImplementedException();
+        public object SyncRoot { get; set;}
 
         public void CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            List<T> elements = new List<T>();
+            elements = MakeArray(_root, elements);
+            
+            foreach(var element in elements)
+            {
+                array.SetValue(element, index);
+                index++;
+            }
+        }
+
+        public bool FindElement(T value)
+        {
+            if (Find(value, _root) != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public IEnumerator GetEnumerator()
         {
-            throw new NotImplementedException();
+           int n = TotalNodes(_root);
+            T[] mass = new T[n];
+            CopyTo(mass, 0);
+            foreach (var item in mass)
+            {
+                yield return item;
+            }
+        }
+        public int GetTreeDepth()
+        {
+            return GetTreeDepth(_root);
+        }
+
+        public void TraversePreOrder()
+        {
+            TraversePreOrder(_root);
         }
 
         public void Insert(T item)
         {
             Node<T> before = null, after = this._root;
-
             while (after != null)
             {
                 before = after;
                 if (after.Data.CompareTo(item) > 0)
+                {
                     after = after.LeftNode;
+                }
                 else if (after.Data.CompareTo(item) < 0)
+                {
                     after = after.RightNode;
+                }
                 else
                 {
                     return;
@@ -50,9 +90,9 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             Node<T> newNode = new Node<T>();
             newNode.Data = item;
 
-            if (this._root == null)
+            if (_root == null)
             {
-                this._root = newNode;
+                _root = newNode;
                 return;
             }
 
@@ -64,56 +104,105 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             {
                 before.RightNode = newNode;
             }
-
-            return;
         }
-
 
         public void Remove(T value)
         {
-            _root = Remove(this._root, value);
+            _root = Remove(_root, value);
         }
+
+        private int left_height(Node<T> node)
+        {
+            int ht = 0;
+            while (node != null)
+            {
+                ht++;
+                node = node.LeftNode;
+            }
+            return ht;
+        }
+
+        private int right_height(Node<T> node)
+        {
+            int ht = 0;
+            while (node != null)
+            {
+                ht++;
+                node = node.RightNode;
+            }
+            return ht;
+        }
+
+        private int TotalNodes(Node<T> root)
+        {
+            // Base Case
+            if (root == null)
+            {
+                return 0;
+            }
+            int lh = left_height(root);
+            int rh = right_height(root);
+            if (lh == rh)
+            {
+                return (1 << lh) - 1;
+            }
+            return 1 + TotalNodes(root.LeftNode)
+                   + TotalNodes(root.RightNode);
+        }
+
         private Node<T> Remove(Node<T> parent, T key)
         {
-            if (parent == null) return parent;
 
-            if (parent.Data.CompareTo(key) > 0) parent.LeftNode = Remove(parent.LeftNode, key);
+            if (parent == null)
+            {
+                var args = new BinaryTreeEventArgs()
+                {
+                    Message = "No such element to remove"
+                };
+                Notify?.Invoke(this, args);
+                return parent;
+            }
+            if (parent.Data.CompareTo(key) > 0)
+            {
+                parent.LeftNode = Remove(parent.LeftNode, key);
+            }
+            
             else if (parent.Data.CompareTo(key) < 0)
+            {
                 parent.RightNode = Remove(parent.RightNode, key);
+            }
 
 
             else
             {
                 if (parent.LeftNode == null)
+                {
                     return parent.RightNode;
+                }
+                
                 else if (parent.RightNode == null)
+                {
                     return parent.LeftNode;
+                }
 
 
                 parent.Data = MinValue(parent.RightNode);
-
 
                 parent.RightNode = Remove(parent.RightNode, parent.Data);
             }
 
             return parent;
         }
-        private Node<T> Find(T value, Node<T> parent)
-        {
-            if (parent == null)
-            {
-                return null;
-            }
 
-            if (parent.Data.CompareTo(value) == 0) return parent;
-            if (parent.Data.CompareTo(value) > 0)
-                return Find(value, parent.LeftNode);
-            else
-                return Find(value, parent.RightNode);
-        }
-        public Node<T> Find(T value)
+        private List<T> MakeArray(Node<T> parent, List<T> arr)
         {
-            return this.Find(value, this._root);
+            if (parent != null)
+            {
+                arr.Add(parent.Data);
+                MakeArray(parent.LeftNode, arr);
+                MakeArray(parent.RightNode, arr);
+            }
+            return arr;
         }
 
         private T MinValue(Node<T> node)
@@ -128,17 +217,8 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
             return minv;
         }
-        public int GetTreeDepth()
-        {
-            return this.GetTreeDepth(this._root);
-        }
-
-        private int GetTreeDepth(Node<T> parent)
-        {
-            return parent == null ? 0 : Math.Max(GetTreeDepth(parent.LeftNode), GetTreeDepth(parent.RightNode)) + 1;
-        }
-
-        public void TraversePreOrder(Node<T> parent)
+        
+        private void TraversePreOrder(Node<T> parent)
         {
             if (parent != null)
             {
@@ -148,26 +228,33 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             }
         }
 
-        public void TraverseInOrder(Node<T> parent)
+        private int GetTreeDepth(Node<T> parent)
         {
-            if (parent != null)
-            {
-                TraverseInOrder(parent.LeftNode);
-                Console.Write(parent.Data + " ");
-                TraverseInOrder(parent.RightNode);
-            }
+            return parent == null ? 0 : Math.Max(GetTreeDepth(parent.LeftNode), GetTreeDepth(parent.RightNode)) + 1;
         }
 
-        public void TraversePostOrder(Node<T> parent)
+        private Node<T> Find(T value, Node<T> parent)
         {
-            if (parent != null)
+            if (parent == null)
             {
-                TraversePostOrder(parent.LeftNode);
-                TraversePostOrder(parent.RightNode);
-                Console.Write(parent.Data + " ");
+                return null;
+            }
+            
+            if (parent.Data.CompareTo(value) == 0)
+            {
+                return parent;
+            }
+            
+            if (parent.Data.CompareTo(value) > 0)
+            {
+                return Find(value, parent.LeftNode);
+            }
+          
+            else
+            {
+                return Find(value, parent.RightNode);
             }
         }
-
-
     }
+
 }
