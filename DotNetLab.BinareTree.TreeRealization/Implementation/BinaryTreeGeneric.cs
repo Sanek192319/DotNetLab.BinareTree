@@ -49,7 +49,8 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
         public IEnumerator GetEnumerator()
         {
-           int n = TotalNodes(_root);
+            int n=0;
+              CountOfElems(_root,ref n);
             T[] mass = new T[n];
             CopyTo(mass, 0);
             foreach (var item in mass)
@@ -135,7 +136,6 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
         private int TotalNodes(Node<T> root)
         {
-            // Base Case
             if (root == null)
             {
                 return 0;
@@ -205,6 +205,16 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             return arr;
         }
 
+        private void CountOfElems(Node<T> parent, ref int k)
+        {
+            if (parent != null)
+            {
+                k++;
+                CountOfElems(parent.LeftNode,ref k);
+                CountOfElems(parent.RightNode, ref k);
+            }
+        }
+        
         private T MinValue(Node<T> node)
         {
             var minv = node.Data;
