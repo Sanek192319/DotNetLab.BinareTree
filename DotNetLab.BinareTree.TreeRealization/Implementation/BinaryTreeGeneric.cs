@@ -9,8 +9,14 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 {
     public class BinaryTreeGeneric<T> : IBinarTree<T> where T : IComparable<T>
     {
+        #region fields
+
         private int _count = 0;
         private Node<T> _root;
+
+        #endregion
+
+        #region properties
 
         public event EventHandler<BinaryTreeEventArgs> Notify;
 
@@ -22,6 +28,10 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
         public bool IsSynchronized { get; set; }
 
         public object SyncRoot { get; set;}
+
+        #endregion
+
+        #region public 
 
         public void CopyTo(Array array, int index)
         {
@@ -111,6 +121,10 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
         {
             _root = Remove(_root, value);
         }
+
+        #endregion
+
+        #region private
 
         private Node<T> Remove(Node<T> parent, T key)
         {
@@ -227,6 +241,8 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
                 return Find(value, parent.RightNode);
             }
         }
+
+        #endregion
     }
 
 }
