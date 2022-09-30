@@ -112,44 +112,6 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             _root = Remove(_root, value);
         }
 
-        private int left_height(Node<T> node)
-        {
-            int ht = 0;
-            while (node != null)
-            {
-                ht++;
-                node = node.LeftNode;
-            }
-            return ht;
-        }
-
-        private int right_height(Node<T> node)
-        {
-            int ht = 0;
-            while (node != null)
-            {
-                ht++;
-                node = node.RightNode;
-            }
-            return ht;
-        }
-
-        private int TotalNodes(Node<T> root)
-        {
-            if (root == null)
-            {
-                return 0;
-            }
-            int lh = left_height(root);
-            int rh = right_height(root);
-            if (lh == rh)
-            {
-                return (1 << lh) - 1;
-            }
-            return 1 + TotalNodes(root.LeftNode)
-                   + TotalNodes(root.RightNode);
-        }
-
         private Node<T> Remove(Node<T> parent, T key)
         {
 

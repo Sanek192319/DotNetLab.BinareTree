@@ -30,6 +30,7 @@ namespace DotNetLab.BinareTree
             binaryTree.Insert(5);
             binaryTree.Insert(4);
             binaryTree.Insert(1);
+            //binaryTree.Insert(1);
 
             bool node = binaryTree.FindElement(5);
             if(node)
