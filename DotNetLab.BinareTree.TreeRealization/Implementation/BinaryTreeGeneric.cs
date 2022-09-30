@@ -60,7 +60,7 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
         public IEnumerator GetEnumerator()
         {
             int n=0;
-              CountOfElems(_root,ref n);
+            CountOfElems(_root,ref n);
             T[] mass = new T[n];
             CopyTo(mass, 0);
             foreach (var item in mass)
@@ -80,7 +80,7 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
         public void Insert(T item)
         {
-            Node<T> before = null, after = this._root;
+            Node<T> before = null, after = _root;
             while (after != null)
             {
                 before = after;
@@ -126,16 +126,20 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
         #region private
 
+        private void ExecuteEvent()
+        {
+            var args = new BinaryTreeEventArgs()
+            {
+                Message = "No such element to remove"
+            };
+            Notify?.Invoke(this, args);
+        }
         private Node<T> Remove(Node<T> parent, T key)
         {
 
             if (parent == null)
             {
-                var args = new BinaryTreeEventArgs()
-                {
-                    Message = "No such element to remove"
-                };
-                Notify?.Invoke(this, args);
+                ExecuteEvent();
                 return parent;
             }
             if (parent.Data.CompareTo(key) > 0)

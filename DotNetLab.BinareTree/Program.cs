@@ -18,9 +18,9 @@ namespace DotNetLab.BinareTree
             
             binaryTree.Notify += DisplayMessage;
 
-            EventHandler<BinaryTreeEventArgs> handler = (sender, e) => Console.WriteLine(e.Message);
+           // EventHandler<BinaryTreeEventArgs> handler = (sender, e) => Console.WriteLine(e.Message);
 
-            binaryTree.Notify += handler;
+           // binaryTree.Notify += handler;
 
 
             binaryTree.Insert(2);
@@ -52,7 +52,7 @@ namespace DotNetLab.BinareTree
             {
                 Console.WriteLine(item.ToString());
             }
-            binaryTree.Remove(4);
+            binaryTree.Remove(144);
             //binaryTree.Remove(7);
             //binaryTree.Remove(8);
             int _depth = binaryTree.GetTreeDepth();
