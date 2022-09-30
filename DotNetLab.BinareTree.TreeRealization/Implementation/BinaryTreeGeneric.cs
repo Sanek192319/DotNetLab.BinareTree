@@ -140,6 +140,7 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             if (parent == null)
             {
                 ExecuteEvent();
+                throw new ArgumentOutOfRangeException();
                 return parent;
             }
             if (parent.Data.CompareTo(key) > 0)
