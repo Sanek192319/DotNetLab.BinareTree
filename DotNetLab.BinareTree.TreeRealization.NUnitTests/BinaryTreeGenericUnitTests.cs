@@ -101,5 +101,82 @@ namespace DotNetLab.BinareTree.TreeRealization.NUnitTests
             //assert
             result.Should().BeFalse();
         }
+
+        [Test]
+        public void GetTreeDepth_AddThreeElems_Return3()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>(){1,2,3};
+
+            CreateTree(binaryTree, collection);
+
+            //act
+            int depth = binaryTree.GetTreeDepth();
+            //assert
+            depth.Should().Be(3);
+        }
+        [Test]
+        public void GetTreeDepth_NoElements_Return0()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>();
+
+            CreateTree(binaryTree, collection);
+
+            //act
+            int depth = binaryTree.GetTreeDepth();
+            //assert
+            depth.Should().Be(0);
+        }
+        [Test]
+        public void GetTreeDepth_NoElements_Return2()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>(){5,4,10};
+
+            CreateTree(binaryTree, collection);
+
+            //act
+            int depth = binaryTree.GetTreeDepth();
+            //assert
+            depth.Should().Be(2);
+        }
+
+        [Test]
+        public void CopyTo_Array3Elems_ReturnTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>() { 5, 4, 10 };
+
+            CreateTree(binaryTree, collection);
+
+            //act
+            int[] array = new int[3];
+            binaryTree.CopyTo(array, 0);
+
+            //assert
+            array.Count().Should().Be(3);
+        }
+
+        [Test]
+        public void GetEnumerator_Array3Elems_ReturnTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>() { 5, 4, 10 };
+
+            CreateTree(binaryTree, collection);
+            //act
+            var test = binaryTree.GetEnumerator();
+            //assert
+            test.Should().Be(new [] { 5, 4, 10 });
+
+
+
+        }
     }
 }

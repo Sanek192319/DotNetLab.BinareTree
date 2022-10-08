@@ -18,7 +18,9 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
         #region properties
 
-        public event EventHandler<BinaryTreeEventArgs> Notify;
+        public event EventHandler<BinaryTreeEventArgs> NotifyRemoveFailed;
+        public event EventHandler<BinaryTreeInsertEventArgs<T>> InsertNotify;
+        public event EventHandler<BinaryTreeRemoveEventArgs<T>> RemoveNotify;
 
         public int Count
         {
@@ -100,6 +102,7 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
             Node<T> newNode = new Node<T>();
             newNode.Data = item;
+            ExecuteEventInsert(item);
 
             if (_root == null)
             {
@@ -125,21 +128,38 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
         #endregion
 
         #region private
-
-        private void ExecuteEvent()
+        private void ExecuteEventInsert(T insertedItem)
+        {
+            var args = new BinaryTreeInsertEventArgs<T>()
+            {
+                Message = "Element inserted",
+                RemovedItem = insertedItem
+            };
+            InsertNotify?.Invoke(this, args);
+        }
+        private void ExecuteEventRemove(T removedItem)
+        {
+            var args = new BinaryTreeRemoveEventArgs<T>()
+            {
+                Message = "Element removed",
+                RemovedItem = removedItem
+            };
+            RemoveNotify?.Invoke(this, args);
+        }
+        private void ExecuteEventRemoveFailed()
         {
             var args = new BinaryTreeEventArgs()
             {
                 Message = "No such element to remove"
             };
-            Notify?.Invoke(this, args);
+            NotifyRemoveFailed?.Invoke(this, args);
         }
         private Node<T> Remove(Node<T> parent, T key)
         {
 
             if (parent == null)
             {
-                ExecuteEvent();
+                ExecuteEventRemoveFailed();
                 return parent;
             }
             if (parent.Data.CompareTo(key) > 0)
@@ -157,11 +177,13 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             {
                 if (parent.LeftNode == null)
                 {
+                    ExecuteEventRemove(key);
                     return parent.RightNode;
                 }
                 
                 else if (parent.RightNode == null)
                 {
+                    ExecuteEventRemove(key);
                     return parent.LeftNode;
                 }
 
@@ -170,7 +192,6 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
 
                 parent.RightNode = Remove(parent.RightNode, parent.Data);
             }
-
             return parent;
         }
 

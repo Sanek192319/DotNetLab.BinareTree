@@ -15,12 +15,15 @@ namespace DotNetLab.BinareTree
             //binaryTree.Insert(4);
             //binaryTree.Insert(2);
             void DisplayMessage(object sender, BinaryTreeEventArgs e) => Console.WriteLine(e.Message);
-            
-            binaryTree.Notify += DisplayMessage;
+            void DisplayMessageRemove(object sender, BinaryTreeRemoveEventArgs<int> e) => Console.WriteLine($"{e.Message}, {e.RemovedItem}");
+
+
+            binaryTree.NotifyRemoveFailed += DisplayMessage;
+            binaryTree.RemoveNotify += DisplayMessageRemove;
 
            // EventHandler<BinaryTreeEventArgs> handler = (sender, e) => Console.WriteLine(e.Message);
 
-           // binaryTree.Notify += handler;
+            // binaryTree.Notify += handler;
 
 
             binaryTree.Insert(2);
@@ -53,8 +56,8 @@ namespace DotNetLab.BinareTree
                 Console.WriteLine(item.ToString());
             }
             binaryTree.Remove(144);
-            //binaryTree.Remove(7);
-            //binaryTree.Remove(8);
+            binaryTree.Remove(7);
+            binaryTree.Remove(8);
             int _depth = binaryTree.GetTreeDepth();
             Console.WriteLine("depth: ");
             Console.WriteLine(_depth);
