@@ -1,9 +1,8 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoBogus;
+using DotNetLab.BinareTree.TreeRealization.Common.Args;
 using DotNetLab.BinareTree.TreeRealization.Implementation;
 using FluentAssertions;
 using NUnit.Framework;
@@ -29,6 +28,22 @@ namespace DotNetLab.BinareTree.TreeRealization.NUnitTests
 
             //assert
             binaryTree.FindElement(itemToInser).Should().BeTrue();
+
+        }
+
+        [Test]
+        public void InsertingInAlreadyExistingBinaryTree_AlreadyExistingValue_ReturnsTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            var itemToInser = new List<int>() { 3, 1 };
+
+            //act
+            CreateTree(binaryTree,itemToInser);
+            binaryTree.Insert(1);
+
+            //assert
+            binaryTree.FindElement(1).Should().BeTrue();
 
         }
 
@@ -61,6 +76,54 @@ namespace DotNetLab.BinareTree.TreeRealization.NUnitTests
 
             //assert
             binaryTree.FindElement(1).Should().BeTrue();
+        }
+
+        [Test]
+        public void RemovingFromBinaryTreeRoot_3elementsInTree_ReturnsTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            var items = new List<int>() { 3, 2, 4 };
+            CreateTree(binaryTree, items);
+
+            //act
+
+            binaryTree.Remove(3);
+
+            //assert
+            binaryTree.FindElement(3).Should().BeFalse();
+        }
+
+        [Test]
+        public void RemovingFromBinaryTreeRoot_3elementsInTreeRight_ReturnsTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            var items = new List<int>() { 1, 2, 3 };
+            CreateTree(binaryTree, items);
+
+            //act
+
+            binaryTree.Remove(2);
+
+            //assert
+            binaryTree.FindElement(2).Should().BeFalse();
+        }
+
+        [Test]
+        public void RemovingFromBinaryTreeRoot_3elementsInTreeLeft_ReturnsTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            var items = new List<int>() { 3,2,1};
+            CreateTree(binaryTree, items);
+
+            //act
+
+            binaryTree.Remove(2);
+
+            //assert
+            binaryTree.FindElement(2).Should().BeFalse();
         }
         private void CreateTree(BinaryTreeGeneric<int> Btree, List<int> list)
         {
@@ -107,7 +170,7 @@ namespace DotNetLab.BinareTree.TreeRealization.NUnitTests
         {
             //arrange
             var binaryTree = new BinaryTreeGeneric<int>();
-            List<int> collection = new List<int>(){1,2,3};
+            List<int> collection = new List<int>() { 1, 2, 3 };
 
             CreateTree(binaryTree, collection);
 
@@ -135,7 +198,7 @@ namespace DotNetLab.BinareTree.TreeRealization.NUnitTests
         {
             //arrange
             var binaryTree = new BinaryTreeGeneric<int>();
-            List<int> collection = new List<int>(){5,4,10};
+            List<int> collection = new List<int>() { 5, 4, 10 };
 
             CreateTree(binaryTree, collection);
 
@@ -166,17 +229,107 @@ namespace DotNetLab.BinareTree.TreeRealization.NUnitTests
         public void GetEnumerator_Array3Elems_ReturnTrue()
         {
             //arrange
+
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>() { 5, 4, 10 };
+            CreateTree(binaryTree, collection);
+
+            //act
+
+            var Array = new int[3];
+            int i = 0;
+            foreach (var item in binaryTree)
+            {
+                Array[i] = (int)item;
+                i++;
+            }
+
+            //assert
+
+
+            Array.Should().Equal(new[] { 5, 4, 10 });
+
+        }
+
+
+        [Test]
+        public void NotifyRemoveFailed_ElementNotFromArray_ReturnTrue()
+        {
+            //arrange
             var binaryTree = new BinaryTreeGeneric<int>();
             List<int> collection = new List<int>() { 5, 4, 10 };
 
             CreateTree(binaryTree, collection);
+            var wascalled = false;
             //act
-            var test = binaryTree.GetEnumerator();
+            binaryTree.NotifyRemoveFailed += delegate (object sender, BinaryTreeEventArgs e) { wascalled = true; };
+            binaryTree.Remove(11);
             //assert
-            test.Should().Be(new [] { 5, 4, 10 });
-
-
+            wascalled.Should().Be(true);
 
         }
+
+        [Test]
+        public void InsertNotify_Element11_ReturnTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>() { 5, 4, 10 };
+
+            CreateTree(binaryTree, collection);
+            var wascalled = false;
+            //act
+            binaryTree.InsertNotify += delegate (object sender, BinaryTreeInsertEventArgs<int> e) { wascalled = true; };
+            binaryTree.Insert(11);
+            //assert
+            wascalled.Should().Be(true);
+
+        }
+
+
+        [Test]
+        public void RemoveNotify_ElementNotFromArray_ReturnTrue()
+        {
+            //arrange
+            var binaryTree = new BinaryTreeGeneric<int>();
+            List<int> collection = new List<int>() { 5, 4, 10 };
+
+            CreateTree(binaryTree, collection);
+            var wascalled = false;
+            //act
+            binaryTree.RemoveNotify += delegate (object sender, BinaryTreeRemoveEventArgs<int> e) { wascalled = true; };
+            binaryTree.Remove(5);
+            //assert
+            wascalled.Should().Be(true);
+
+        }
+
+
+        [Test]
+        public void AnyTree_ReturnFalse()
+        {
+            var tree = new BinaryTreeGeneric<int>();
+
+            tree.IsSynchronized.Should().BeFalse();
+        }
+
+
+
+            [Test]
+            public void AnyTree_ReturnNull()
+            {
+            var tree = new BinaryTreeGeneric<int>();
+
+            tree.SyncRoot.Should().BeNull();
+            }
+
+            [Test]
+            public void AnyTreeCount_ReturnNull()
+            {
+                var tree = new BinaryTreeGeneric<int>();
+
+                tree.Count.Should().Be(0);
+            }
+
     }
 }

@@ -27,9 +27,9 @@ namespace DotNetLab.BinareTree.TreeRealization.Implementation
             get => _count;
         }
 
-        public bool IsSynchronized { get; set; }
+        public bool IsSynchronized { get; }
 
-        public object SyncRoot { get; set;}
+        public object SyncRoot { get; }
 
         #endregion
 
